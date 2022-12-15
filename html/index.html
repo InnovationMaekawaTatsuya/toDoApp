@@ -1,13 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do App</title>
+    <meta charset="utf-8">
+    <title>ToDoList</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="../js/vue.js"></script>
 </head>
 <body>
-    
+    <div id="app">
+        <h1>ToDoList</h1>
+        <label v-for="label in options">
+            <!-- v-modelをcurrentにすることで現在のstateと同期 -->
+            <input type="radio" v-model="current" :value="label.value">{{ label.label }}
+        </label>
+        <span>（{{ computedTodos.length }} 件を表示）</span>
+
+        <table>
+            <thead v-pre>
+            <tr>
+                <th class="id">ID</th>
+                <th class="comment">コメント</th>
+                <th class="state">状態</th>
+                <th class="button">-</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="item in computedTodos" :key="item.id" :class="{done:item.state}">
+                <th>{{ item.id }}</th>
+                <td>{{ item.comment }}</td>
+                <td class="state">
+                    <button @click="doChangeState(item)">
+                        {{ labels[item.state] }}
+                    </button>
+                </td>
+                <td class="button">
+                    <button @click="doRemove(item)">
+                        削除
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+
+        </table>
+        <h2>新しい作業の追加</h2>
+        <form class="add-form" @submit.prevent="doAdd">
+            コメント <input type="text" ref="comment">
+            <button type="submit">追加</button>
+        </form>
+    </div>
 </body>
 </html>
